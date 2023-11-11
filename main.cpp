@@ -84,6 +84,20 @@ void trim(User &user)
     token = "";
 }
 
+void trim_mini(std::string &data_part)
+{
+    std::string token{""};
+    for (int i{0}; i < data_part.size(); i++)
+    {
+        std::set<char> wsc{' ', '\n', '\r', '\t'};
+        if (!wsc.contains(data_part[i]))
+        {
+            token += data_part[i];
+        }
+    }
+    data_part = token;
+}
+
 void clean_print(User user)
 {
 
@@ -108,6 +122,26 @@ void clean_print(User user)
     std::cout << user.phone_num << '\n';
     std::cout << user.adress << '\n';
     std::cout << user.postal_code << '\n';
+};
+
+void clean_up(User user)
+{
+
+    std::string delimiter{":"};
+    std::string token{user.name.substr(user.name.find(delimiter) + 1, user.name.size())};
+    user.name = token;
+
+    token = user.surname.substr(user.surname.find(delimiter) + 1, user.surname.size());
+    user.surname = token;
+
+    token = user.phone_num.substr(user.phone_num.find(delimiter) + 1, user.phone_num.size());
+    user.phone_num = token;
+
+    token = user.adress.substr(user.adress.find(delimiter) + 1, user.adress.size());
+    user.adress = token;
+
+    token = user.postal_code.substr(user.postal_code.find(delimiter) + 1, user.postal_code.size());
+    user.postal_code = token;
 };
 
 void to_lower(User &user)
@@ -149,6 +183,8 @@ int main()
 
         std::vector<User> data{};
 
+        std::vector<User> data2delete{};
+
         User user;
 
         std::cout << "Choose by typing the corresponding number\n";
@@ -189,31 +225,11 @@ int main()
         }
 
         std::string temp{};
+        std::string temp2{};
 
         switch (a)
         {
         case 1:
-
-            /*while (ifile >> temp)
-            {
-                data.push_back(temp);
-            }
-
-            for (int i{0}; i < static_cast<int>(data.size()); i++)
-            {
-                std::cout << data[i] << '\n';
-            }
-
-            for (int i{0}; i < data.size(); i++)
-            {
-                std::cout << data[i].name
-            }
-
-            for (User currentUser : data)
-            {
-                std::cout << currentUser.name
-            }
-            */
 
             while (ifile >> temp)
             {
@@ -270,14 +286,6 @@ int main()
             std::cout << "Enter the postal code\n";
             std::getline(std::cin, user.postal_code);
 
-            /* ofile << "N:" << user.name << '\n';
-             ofile << "S:" << user.surname << '\n';
-             ofile << "PN:" << user.phone_num << '\n';
-             ofile << "A:" << user.adress << '\n';
-             ofile << "PC:" << user.postal_code << '\n';
-             ofile << "E\n";
-             ofile.close();
-             */
             trim(user);
 
             to_lower(user);
@@ -297,7 +305,44 @@ int main()
 
             std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
 
-            std::cout << temp << '\n';
+            trim_mini(temp);
+
+            while (ifile >> temp2)
+            {
+                if (temp2.starts_with("N:"))
+                {
+                    user.name = temp2;
+                }
+                else if (temp2.starts_with("S:"))
+                {
+                    user.surname = temp2;
+                }
+                else if (temp2.starts_with("PN:"))
+                {
+                    user.phone_num = temp2;
+                }
+                else if (temp2.starts_with("A:"))
+                {
+                    user.adress = temp2;
+                }
+                else if (temp2.starts_with("PC:"))
+                {
+                    user.postal_code = temp2;
+                }
+                else
+                {
+                    data.push_back(user);
+                }
+            }
+
+            for (User print : data)
+            {
+
+                if (print.name == temp)
+                {
+                    data2delete.push_back(print);
+                }
+            }
 
             break;
 
