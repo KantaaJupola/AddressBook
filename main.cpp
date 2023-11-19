@@ -16,8 +16,37 @@ public:
     std::string postal_code{};
 };
 
-void user_delete(std::string user_component)
+int containsData(User user, std::string enteredData)
 {
+    std::string delimiter{":"};
+    std::string token{user.name.substr(user.name.find(delimiter) + 1, user.name.size())};
+    user.name = token;
+
+    token = user.surname.substr(user.surname.find(delimiter) + 1, user.surname.size());
+    user.surname = token;
+
+    token = user.phone_num.substr(user.phone_num.find(delimiter) + 1, user.phone_num.size());
+    user.phone_num = token;
+
+    token = user.adress.substr(user.adress.find(delimiter) + 1, user.adress.size());
+    user.adress = token;
+
+    token = user.postal_code.substr(user.postal_code.find(delimiter) + 1, user.postal_code.size());
+    user.postal_code = token;
+
+    if(user.name == enteredData){
+        return true;
+    } else if(user.surname == enteredData){
+        return true;
+    } else if(user.phone_num == enteredData){
+        return true;
+    } else if(user.adress == enteredData){
+        return true;
+    } else if(user.postal_code == enteredData){
+        return true;
+    } else{
+        return false;
+    }
 }
 
 void trim(User &user)
@@ -337,12 +366,29 @@ int main()
 
             for (User print : data)
             {
-
-                if (print.name == temp)
+                if (containsData(print, temp))
                 {
                     data2delete.push_back(print);
                 }
             }
+
+            switch (data2delete.size())
+            {
+            case 0:
+                std::cout << "The data you provided does not match the data located in the Adress Book!\n";
+                break;
+
+            case 1:
+                std::cout << "Are you sure you want to delete this user?\n";
+                
+            break;
+            
+            default:
+                break;
+            }
+                
+            
+            
 
             break;
 
