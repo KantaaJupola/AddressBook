@@ -14,6 +14,11 @@ public:
     std::string phone_num{};
     std::string adress{};
     std::string postal_code{};
+
+    bool operator==(const User &other) const
+    {
+        return name == other.name && surname == other.surname && phone_num == other.phone_num && adress == other.adress && postal_code == other.postal_code;
+    }
 };
 
 int containsData(User user, std::string enteredData)
@@ -34,19 +39,57 @@ int containsData(User user, std::string enteredData)
     token = user.postal_code.substr(user.postal_code.find(delimiter) + 1, user.postal_code.size());
     user.postal_code = token;
 
-    if(user.name == enteredData){
+    if (user.name == enteredData)
+    {
         return true;
-    } else if(user.surname == enteredData){
+    }
+    else if (user.surname == enteredData)
+    {
         return true;
-    } else if(user.phone_num == enteredData){
+    }
+    else if (user.phone_num == enteredData)
+    {
         return true;
-    } else if(user.adress == enteredData){
+    }
+    else if (user.adress == enteredData)
+    {
         return true;
-    } else if(user.postal_code == enteredData){
+    }
+    else if (user.postal_code == enteredData)
+    {
         return true;
-    } else{
+    }
+    else
+    {
         return false;
     }
+}
+
+void deleteDataIfOne(std::vector<User> dataToDelete, std::vector<User> allData)
+{
+    for (int i{0}; i < allData.size(); i++)
+    {
+        if (allData[i] == dataToDelete[0])
+        {
+            allData.erase(allData.begin() + i);
+        }
+    }
+    std::ofstream ofile("adressbook.txt", std::ios::trunc);
+    ofile.close();
+    for (User user : allData)
+    {
+        ofile.open("adressbook.txt", std::ios::app);
+        ofile << user.name << '\n';
+        ofile << user.surname << '\n';
+        ofile << user.phone_num << '\n';
+        ofile << user.adress << '\n';
+        ofile << user.postal_code << '\n';
+        ofile << "E\n";
+        ofile.close();
+    }
+}
+void deleteDataIfMore()
+{
 }
 
 void trim(User &user)
@@ -255,6 +298,7 @@ int main()
 
         std::string temp{};
         std::string temp2{};
+        std::string answer{};
 
         switch (a)
         {
@@ -372,23 +416,33 @@ int main()
                 }
             }
 
-            switch (data2delete.size())
+            if (data2delete.size() == 1)
+            {   
+                user = data2delete[0];
+                std::cout << "Are you sure you want to delete this user from the Adress Book?\n";
+                std::cout << user.name << '\n';
+                std::cout << user.surname << '\n';
+                std::cout << user.phone_num << '\n';
+                std::cout << user.postal_code << '\n';
+                std::cout << user.surname << '\n';
+                std::cout << "Y/N?\n";
+                std::cin >> answer;
+                std::transform(answer.begin(), answer.end(), answer.begin(), ::tolower);
+                if (answer == "y")
+                {
+                    ifile.close();
+                    ofile.close();
+                    deleteDataIfOne(data2delete, data);
+                }
+            }
+            else if (data2delete.size() > 2)
             {
-            case 0:
-                std::cout << "The data you provided does not match the data located in the Adress Book!\n";
-                break;
-
-            case 1:
-                std::cout << "Are you sure you want to delete this user?\n";
-                
-            break;
-            
-            default:
+            }
+            else
+            {
+                std::cout << "The data you entered does not match any of the data in the Adress Book!\n";
                 break;
             }
-                
-            
-            
 
             break;
 
