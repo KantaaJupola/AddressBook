@@ -65,11 +65,11 @@ int containsData(User user, std::string enteredData)
     }
 }
 
-void deleteDataIfOne(std::vector<User> dataToDelete, std::vector<User> allData)
+void deleteAnUser(std::vector<User> dataToDelete, std::vector<User> allData, int a)
 {
     for (int i{0}; i < allData.size(); i++)
     {
-        if (allData[i] == dataToDelete[0])
+        if (allData[i] == dataToDelete[a])
         {
             allData.erase(allData.begin() + i);
         }
@@ -424,19 +424,33 @@ int main()
                 std::cout << user.surname << '\n';
                 std::cout << user.phone_num << '\n';
                 std::cout << user.postal_code << '\n';
-                std::cout << user.surname << '\n';
+                std::cout << user.adress << '\n';
                 std::cout << "Y/N?\n";
                 std::cin >> answer;
                 std::transform(answer.begin(), answer.end(), answer.begin(), ::tolower);
-                if (answer == "y")
+                if (answer == "y" || answer == "yes")
                 {
                     ifile.close();
                     ofile.close();
-                    deleteDataIfOne(data2delete, data);
+                    deleteAnUser(data2delete, data, 0);
                 }
+                std::cout << "The user has been deleted from the adress book!\n";
             }
-            else if (data2delete.size() > 2)
+            else if (data2delete.size() >= 2)
             {
+                std::cout << "There are multiple users with the data you provided.\n";
+                std::cout << "Please select which one you want to delete.\n";
+                for (int i{}; i < data2delete.size(); i++){
+                    std::cout << i + 1 << ".\n";
+                    std::cout << data2delete[i].name << "\n";
+                    std::cout << data2delete[i].surname << "\n";
+                    std::cout << data2delete[i].phone_num << "\n";
+                    std::cout << data2delete[i].postal_code << "\n";
+                    std::cout << data2delete[i].adress << "\n";
+                }
+                int choice{};
+                std::cin >> choice;
+                deleteAnUser(data2delete, data, choice - 1);
             }
             else
             {
