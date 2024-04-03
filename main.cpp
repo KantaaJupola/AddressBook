@@ -65,7 +65,7 @@ int containsData(User user, std::string enteredData)
     }
 }
 
-void deleteAnUser(std::vector<User> dataToDelete, std::vector<User> allData, int a)
+void deleteAUser(std::vector<User> dataToDelete, std::vector<User> allData, int a)
 {
     for (int i{0}; i < allData.size(); i++)
     {
@@ -88,8 +88,49 @@ void deleteAnUser(std::vector<User> dataToDelete, std::vector<User> allData, int
         ofile.close();
     }
 }
-void deleteDataIfMore()
+
+void editAUser(std::vector<User> dataToEdit, std::vector<User> allData, int a)
 {
+    for (int i{0}; i < allData.size(); i++)
+    {
+        if (allData[i] == dataToEdit[a])
+        {
+            allData.erase(allData.begin() + i);
+            std::cout << "Enter the new data\n";
+            User user;
+            std::cin >> user.name;
+            std::cin >> user.surname;
+            std::cin >> user.phone_num;
+            std::cin >> user.adress;
+            std::cin >> user.postal_code;
+            allData.push_back(user); 
+        }
+    }
+    std::ofstream ofile("adressbook.txt", std::ios::trunc);
+    ofile.close();
+    for (User user : allData)
+    {
+        if(user.name.starts_with("N:")){
+        ofile.open("adressbook.txt", std::ios::app);
+        ofile << user.name << '\n';
+        ofile << user.surname << '\n';
+        ofile << user.phone_num << '\n';
+        ofile << user.adress << '\n';
+        ofile << user.postal_code << '\n';
+        ofile << "E\n";
+        ofile.close();
+        } else{
+            ofile.open("adressbook.txt", std::ios::app);
+            ofile << "N:" << user.name << '\n';
+            ofile << "S:" << user.surname << '\n';
+            ofile << "PN:" << user.phone_num << '\n';
+            ofile << "A:" << user.adress << '\n';
+            ofile << "PC:" << user.postal_code << '\n';
+            ofile << "E\n";
+            ofile.close();
+        }
+        
+    }
 }
 
 void trim(User &user)
@@ -256,6 +297,7 @@ int main()
         std::vector<User> data{};
 
         std::vector<User> data2delete{};
+        std::vector<User> data2edit{};
 
         User user;
 
@@ -432,9 +474,10 @@ int main()
                 {
                     ifile.close();
                     ofile.close();
-                    deleteAnUser(data2delete, data, 0);
+                    deleteAUser(data2delete, data, 0);
+                    std::cout << "The user has been deleted from the adress book!\n";
                 }
-                std::cout << "The user has been deleted from the adress book!\n";
+                
             }
             else if (data2delete.size() >= 2)
             {
@@ -450,7 +493,7 @@ int main()
                 }
                 int choice{};
                 std::cin >> choice;
-                deleteAnUser(data2delete, data, choice - 1);
+                deleteAUser(data2delete, data, choice - 1);
             }
             else
             {
@@ -461,6 +504,100 @@ int main()
             break;
 
         case 4:
+
+            std::cout << "Enter the information of the user you want to edit.\n";
+
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            std::getline(std::cin, temp);
+
+            std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+
+            trim_mini(temp);
+
+            while (ifile >> temp2)
+            {
+                if (temp2.starts_with("N:"))
+                {
+                    user.name = temp2;
+                }
+                else if (temp2.starts_with("S:"))
+                {
+                    user.surname = temp2;
+                }
+                else if (temp2.starts_with("PN:"))
+                {
+                    user.phone_num = temp2;
+                }
+                else if (temp2.starts_with("A:"))
+                {
+                    user.adress = temp2;
+                }
+                else if (temp2.starts_with("PC:"))
+                {
+                    user.postal_code = temp2;
+                }
+                else
+                {
+                    data.push_back(user);
+                }
+            }
+
+            for (User print : data)
+            {
+                if (containsData(print, temp))
+                {
+                    data2edit.push_back(print);
+                }
+            }
+
+            if (data2edit.size() == 1)
+            {   
+                user = data2edit[0];
+                std::cout << "Are you sure you want to edit this user from the Adress Book?\n";
+                std::cout << user.name << '\n';
+                std::cout << user.surname << '\n';
+                std::cout << user.phone_num << '\n';
+                std::cout << user.postal_code << '\n';
+                std::cout << user.adress << '\n';
+                std::cout << "Y/N?\n";
+                std::cin >> answer;
+                std::transform(answer.begin(), answer.end(), answer.begin(), ::tolower);
+                if (answer == "y" || answer == "yes")
+                {
+                    ifile.close();
+                    ofile.close();
+                    
+                    editAUser(data2edit, data, 0);
+
+                    std::cout << "The user has been edited!\n";
+                }
+                
+            }
+            else if (data2edit.size() >= 2)
+            {
+                std::cout << "There are multiple users with the data you provided.\n";
+                std::cout << "Please select which one you want to edit.\n";
+                for (int i{}; i < data2edit.size(); i++){
+                    std::cout << i + 1 << ".\n";
+                    std::cout << data2delete[i].name << "\n";
+                    std::cout << data2delete[i].surname << "\n";
+                    std::cout << data2delete[i].phone_num << "\n";
+                    std::cout << data2delete[i].postal_code << "\n";
+                    std::cout << data2delete[i].adress << "\n";
+                }
+                int choice{};
+                std::cin >> choice;
+
+                editAUser(data2edit, data, choice - 1);
+                
+            }
+            else
+            {
+                std::cout << "The data you entered does not match any of the data in the Adress Book!\n";
+                break;
+            }
 
             break;
 
