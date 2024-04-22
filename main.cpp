@@ -21,118 +21,6 @@ public:
     }
 };
 
-int containsData(User user, std::string enteredData)
-{
-    std::string delimiter{":"};
-    std::string token{user.name.substr(user.name.find(delimiter) + 1, user.name.size())};
-    user.name = token;
-
-    token = user.surname.substr(user.surname.find(delimiter) + 1, user.surname.size());
-    user.surname = token;
-
-    token = user.phone_num.substr(user.phone_num.find(delimiter) + 1, user.phone_num.size());
-    user.phone_num = token;
-
-    token = user.adress.substr(user.adress.find(delimiter) + 1, user.adress.size());
-    user.adress = token;
-
-    token = user.postal_code.substr(user.postal_code.find(delimiter) + 1, user.postal_code.size());
-    user.postal_code = token;
-
-    if (user.name == enteredData)
-    {
-        return true;
-    }
-    else if (user.surname == enteredData)
-    {
-        return true;
-    }
-    else if (user.phone_num == enteredData)
-    {
-        return true;
-    }
-    else if (user.adress == enteredData)
-    {
-        return true;
-    }
-    else if (user.postal_code == enteredData)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-void deleteAUser(std::vector<User> dataToDelete, std::vector<User> allData, int a)
-{
-    for (int i{0}; i < allData.size(); i++)
-    {
-        if (allData[i] == dataToDelete[a])
-        {
-            allData.erase(allData.begin() + i);
-        }
-    }
-    std::ofstream ofile("adressbook.txt", std::ios::trunc);
-    ofile.close();
-    for (User user : allData)
-    {
-        ofile.open("adressbook.txt", std::ios::app);
-        ofile << user.name << '\n';
-        ofile << user.surname << '\n';
-        ofile << user.phone_num << '\n';
-        ofile << user.adress << '\n';
-        ofile << user.postal_code << '\n';
-        ofile << "E\n";
-        ofile.close();
-    }
-}
-
-void editAUser(std::vector<User> dataToEdit, std::vector<User> allData, int a)
-{
-    for (int i{0}; i < allData.size(); i++)
-    {
-        if (allData[i] == dataToEdit[a])
-        {
-            allData.erase(allData.begin() + i);
-            std::cout << "Enter the new data\n";
-            User user;
-            std::cin >> user.name;
-            std::cin >> user.surname;
-            std::cin >> user.phone_num;
-            std::cin >> user.adress;
-            std::cin >> user.postal_code;
-            allData.push_back(user); 
-        }
-    }
-    std::ofstream ofile("adressbook.txt", std::ios::trunc);
-    ofile.close();
-    for (User user : allData)
-    {
-        if(user.name.starts_with("N:")){
-        ofile.open("adressbook.txt", std::ios::app);
-        ofile << user.name << '\n';
-        ofile << user.surname << '\n';
-        ofile << user.phone_num << '\n';
-        ofile << user.adress << '\n';
-        ofile << user.postal_code << '\n';
-        ofile << "E\n";
-        ofile.close();
-        } else{
-            ofile.open("adressbook.txt", std::ios::app);
-            ofile << "N:" << user.name << '\n';
-            ofile << "S:" << user.surname << '\n';
-            ofile << "PN:" << user.phone_num << '\n';
-            ofile << "A:" << user.adress << '\n';
-            ofile << "PC:" << user.postal_code << '\n';
-            ofile << "E\n";
-            ofile.close();
-        }
-        
-    }
-}
-
 void trim(User &user)
 {
     // name
@@ -195,6 +83,119 @@ void trim(User &user)
     }
     user.postal_code = token;
     token = "";
+}
+
+int containsData(User user, std::string enteredData)
+{
+    std::string delimiter{":"};
+    std::string token{user.name.substr(user.name.find(delimiter) + 1, user.name.size())};
+    user.name = token;
+
+    token = user.surname.substr(user.surname.find(delimiter) + 1, user.surname.size());
+    user.surname = token;
+
+    token = user.phone_num.substr(user.phone_num.find(delimiter) + 1, user.phone_num.size());
+    user.phone_num = token;
+
+    token = user.adress.substr(user.adress.find(delimiter) + 1, user.adress.size());
+    user.adress = token;
+
+    token = user.postal_code.substr(user.postal_code.find(delimiter) + 1, user.postal_code.size());
+    user.postal_code = token;
+
+    if (user.name == enteredData)
+    {
+        return true;
+    }
+    else if (user.surname == enteredData)
+    {
+        return true;
+    }
+    else if (user.phone_num == enteredData)
+    {
+        return true;
+    }
+    else if (user.adress == enteredData)
+    {
+        return true;
+    }
+    else if (user.postal_code == enteredData)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void deleteAUser(std::vector<User> dataToDelete, std::vector<User> allData, int a)
+{
+    for (int i{0}; i < allData.size(); i++)
+    {
+        if (allData[i] == dataToDelete[a])
+        {
+            allData.erase(allData.begin() + i);
+        }
+    }
+    std::ofstream ofile("addressbook.txt", std::ios::trunc);
+    ofile.close();
+    for (User user : allData)
+    {
+        ofile.open("addressbook.txt", std::ios::app);
+        ofile << user.name << '\n';
+        ofile << user.surname << '\n';
+        ofile << user.phone_num << '\n';
+        ofile << user.adress << '\n';
+        ofile << user.postal_code << '\n';
+        ofile << "E\n";
+        ofile.close();
+    }
+}
+
+void editAUser(std::vector<User> dataToEdit, std::vector<User> allData, int a)
+{
+    for (int i{0}; i < allData.size(); i++)
+    {
+        if (allData[i] == dataToEdit[a])
+        {
+            allData.erase(allData.begin() + i);
+            std::cout << "Enter the new data\n";
+            User user;
+            std::getline(std::cin, user.name);
+            std::getline(std::cin, user.surname);
+            std::getline(std::cin, user.phone_num);
+            std::getline(std::cin, user.adress);
+            std::getline(std::cin, user.postal_code);
+            trim(user);
+            allData.push_back(user);
+        }
+    }
+    std::ofstream ofile("addressbook.txt", std::ios::trunc);
+    ofile.close();
+    for (User user : allData)
+    {
+        if(user.name.starts_with("N:")){
+        ofile.open("addressbook.txt", std::ios::app);
+        ofile << user.name << '\n';
+        ofile << user.surname << '\n';
+        ofile << user.phone_num << '\n';
+        ofile << user.adress << '\n';
+        ofile << user.postal_code << '\n';
+        ofile << "E\n";
+        ofile.close();
+        } else{
+            ofile.open("addressbook.txt", std::ios::app);
+            ofile << "N:" << user.name << '\n';
+            ofile << "S:" << user.surname << '\n';
+            ofile << "PN:" << user.phone_num << '\n';
+            ofile << "A:" << user.adress << '\n';
+            ofile << "PC:" << user.postal_code << '\n';
+            ofile << "E\n";
+            ofile.close();
+        }
+
+    }
 }
 
 void trim_mini(std::string &data_part)
@@ -273,7 +274,7 @@ void to_lower(User &user)
 void file_output(User user)
 {
 
-    std::ofstream temp_os{"adressbook.txt", std::ios::app};
+    std::ofstream temp_os{"addressbook.txt", std::ios::app};
     temp_os << "N:" << user.name << '\n';
     temp_os << "S:" << user.surname << '\n';
     temp_os << "PN:" << user.phone_num << '\n';
@@ -286,8 +287,8 @@ void file_output(User user)
 int main()
 {
 
-    std::ofstream ofile("adressbook.txt", std::ios::app);
-    std::ifstream ifile("adressbook.txt", std::ios::app);
+    std::ofstream ofile("addressbook.txt", std::ios::app);
+    std::ifstream ifile("addressbook.txt", std::ios::app);
 
     std::vector<User> ab_content{};
 
@@ -303,7 +304,7 @@ int main()
 
         std::cout << "Choose by typing the corresponding number\n";
 
-        std::cout << "1. View the Adress Book\n";
+        std::cout << "1. View the Address Book\n";
 
         std::cout << "2. Add a new user\n";
 
@@ -330,12 +331,12 @@ int main()
 
         if (!ifile.is_open())
         {
-            ifile.open("adressbook.txt", std::ios::app);
+            ifile.open("addressbook.txt", std::ios::app);
         }
 
         if (!ofile.is_open())
         {
-            ofile.open("adressbook.txt", std::ios::app);
+            ofile.open("addressbook.txt", std::ios::app);
         }
 
         std::string temp{};
@@ -459,9 +460,9 @@ int main()
             }
 
             if (data2delete.size() == 1)
-            {   
+            {
                 user = data2delete[0];
-                std::cout << "Are you sure you want to delete this user from the Adress Book?\n";
+                std::cout << "Are you sure you want to delete this user from the Address Book?\n";
                 std::cout << user.name << '\n';
                 std::cout << user.surname << '\n';
                 std::cout << user.phone_num << '\n';
@@ -475,9 +476,9 @@ int main()
                     ifile.close();
                     ofile.close();
                     deleteAUser(data2delete, data, 0);
-                    std::cout << "The user has been deleted from the adress book!\n";
+                    std::cout << "The user has been deleted from the address book!\n";
                 }
-                
+
             }
             else if (data2delete.size() >= 2)
             {
@@ -497,7 +498,7 @@ int main()
             }
             else
             {
-                std::cout << "The data you entered does not match any of the data in the Adress Book!\n";
+                std::cout << "The data you entered does not match any of the data in the Address Book!\n";
                 break;
             }
 
@@ -553,9 +554,9 @@ int main()
             }
 
             if (data2edit.size() == 1)
-            {   
+            {
                 user = data2edit[0];
-                std::cout << "Are you sure you want to edit this user from the Adress Book?\n";
+                std::cout << "Are you sure you want to edit this user from the Address Book?\n";
                 std::cout << user.name << '\n';
                 std::cout << user.surname << '\n';
                 std::cout << user.phone_num << '\n';
@@ -568,12 +569,12 @@ int main()
                 {
                     ifile.close();
                     ofile.close();
-                    
+
                     editAUser(data2edit, data, 0);
 
                     std::cout << "The user has been edited!\n";
                 }
-                
+
             }
             else if (data2edit.size() >= 2)
             {
@@ -591,11 +592,11 @@ int main()
                 std::cin >> choice;
 
                 editAUser(data2edit, data, choice - 1);
-                
+
             }
             else
             {
-                std::cout << "The data you entered does not match any of the data in the Adress Book!\n";
+                std::cout << "The data you entered does not match any of the data in the Address Book!\n";
                 break;
             }
 
@@ -605,7 +606,7 @@ int main()
 
             ifile.close();
             ofile.close();
-            ofile.open("adressbook.txt", std::ios::out | std::ios::trunc);
+            ofile.open("addressbook.txt", std::ios::out | std::ios::trunc);
             ofile.close();
 
             break;
@@ -615,6 +616,8 @@ int main()
             ofile.close();
             break;
         }
+        ifile.close();
+        ofile.close();
     }
 
     return 0;
